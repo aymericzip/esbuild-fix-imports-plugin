@@ -1,8 +1,15 @@
 import { relative, resolve } from "path";
 import { type Plugin } from "esbuild";
+import { createRequire } from "module";
 
 // Get the current working directory as the origin absolute path.
 const originAbsolutePath = process.cwd();
+
+// Ensure using require function in ES modules.
+const isESModule = typeof import.meta.url === "string";
+export const requireFunction = isESModule
+  ? createRequire(import.meta.url)
+  : require;
 
 /**
  * ESBuild plugin to forcefully replace path aliases with relative paths in the output files.
@@ -12,7 +19,7 @@ const originAbsolutePath = process.cwd();
  */
 export const fixAliasPlugin = (): Plugin => ({
   name: "fixAliasPlugin",
-  setup: async (build) => {
+  setup: (build) => {
     // Resolve the absolute path to the output directory.
     const outDir = build.initialOptions.outdir ?? "dist";
     const outDirAbsolutePath = resolve(originAbsolutePath, outDir);
@@ -24,9 +31,7 @@ export const fixAliasPlugin = (): Plugin => ({
     const tsconfigPath = build.initialOptions.tsconfig ?? "./tsConfig.ts";
 
     // Import the tsconfig.json file as a JSON module.
-    const { default: tsConfig } = await import(tsconfigPath, {
-      assert: { type: "json" },
-    });
+    const tsConfig = requireFunction(tsconfigPath);
 
     // Extract the 'paths' from the tsconfig compilerOptions, or default to an empty object.
     const alias = tsConfig?.compilerOptions?.paths ?? {};
