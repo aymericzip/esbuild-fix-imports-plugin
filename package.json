@@ -1,8 +1,7 @@
 {
   "name": "esbuild-fix-imports-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An ESBuild plugin that fixes import paths by applying fixAliasPlugin, fixFolderImportsPlugin, and fixExtensionsPlugin. It ensures correct file extensions, resolves path aliases, and fixes directory imports in your build output when using 'tsup' with 'bundle: false'.",
-  "main": "dist/cjs/index.cjs",
   "scripts": {
     "build": "tsup",
     "clean": "rimraf ./dist"
@@ -43,6 +42,7 @@
       "url": "https://github.com/aymericzip"
     }
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/esm/index.d.mts",
@@ -51,6 +51,8 @@
     },
     "./package.json": "./package.json"
   },
+  "main": "dist/cjs/index.cjs",
+  "types": "dist/esm/index.d.mts",
   "module": "dist/esm/index.mjs",
   "typesVersions": {
     "*": {
