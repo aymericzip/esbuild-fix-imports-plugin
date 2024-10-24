@@ -10,9 +10,9 @@ import { fixFolderImportsPlugin } from "./fixFolderImportsPlugin";
  */
 export const fixImportsPlugin = (): Plugin => ({
   name: "fixImportsPlugin",
-  setup(build) {
+  setup: async (build) => {
     // Apply each plugin's setup function
-    fixAliasPlugin().setup(build);
+    await fixAliasPlugin().setup(build);
     fixFolderImportsPlugin().setup(build);
     fixExtensionsPlugin().setup(build);
   },
