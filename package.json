@@ -1,0 +1,75 @@
+{
+  "name": "esbuild-fix-imports-plugin",
+  "version": "1.0.0",
+  "description": "An ESBuild plugin that fixes import paths by applying fixAliasPlugin, fixFolderImportsPlugin, and fixExtensionsPlugin. It ensures correct file extensions, resolves path aliases, and fixes directory imports in your build output when using 'tsup' with 'bundle: false'.",
+  "main": "dist/cjs/index.cjs",
+  "scripts": {
+    "build": "tsup",
+    "clean": "rimraf ./dist"
+  },
+  "private": false,
+  "keywords": [
+    "esbuild",
+    "plugin",
+    "imports",
+    "fix",
+    "alias",
+    "extensions",
+    "folder-imports",
+    "typescript",
+    "tsup",
+    "bundle-false",
+    "import-paths",
+    "path-aliases",
+    "module-resolution"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/aymericzip/esbuild-fix-imports-plugin",
+  "bugs": {
+    "url": "https://github.com/aymericzip/esbuild-fix-imports-plugin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aymericzip/esbuild-fix-imports-plugin.git"
+  },
+  "author": {
+    "name": "Aymeric PINEAU",
+    "url": "https://github.com/aymericzip"
+  },
+  "contributors": [
+    {
+      "name": "Aymeric Pineau",
+      "email": "ay.pineau@gmail.com",
+      "url": "https://github.com/aymericzip"
+    }
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.mts",
+      "require": "./dist/cjs/index.cjs",
+      "import": "./dist/esm/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "module": "dist/esm/index.mjs",
+  "typesVersions": {
+    "*": {
+      "package.json": [
+        "./package.json"
+      ]
+    }
+  },
+  "files": [
+    "./dist",
+    "./package.json"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.7.9",
+    "esbuild": "^0.24.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.5.4"
+  },
+  "bug": {
+    "url": "https://github.com/aymericzip/esbuild-fix-imports-plugin/issues"
+  }
+}
