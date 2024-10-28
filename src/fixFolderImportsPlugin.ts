@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import { existsSync, statSync } from "fs";
+import { dirname, resolve } from "path";
 import { type Plugin } from "esbuild";
 
 /**
@@ -105,11 +105,11 @@ const replaceFolderImport = (importPath: string, filePath: string) => {
   }
 
   // Resolve the import path relative to the current file's directory.
-  const currentDir = path.dirname(filePath);
-  const resolvedPath = path.resolve(currentDir, importPath);
+  const currentDir = dirname(filePath);
+  const resolvedPath = resolve(currentDir, importPath);
 
   // Check if the resolved path is a directory.
-  if (fs.existsSync(resolvedPath) && fs.statSync(resolvedPath).isDirectory()) {
+  if (existsSync(resolvedPath) && statSync(resolvedPath).isDirectory()) {
     // Append '/index' to the import path to explicitly reference the index file.
     return `${importPath}/index`;
   }
