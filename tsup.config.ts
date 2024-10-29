@@ -4,7 +4,7 @@ import { fixImportsPlugin } from "./src";
 export const commonOptions: Options = {
   entry: ["src/**/*"],
   target: "esnext",
-  dts: true,
+  dts: false,
   external: ["fs", "path"],
   clean: true,
   sourcemap: true,
