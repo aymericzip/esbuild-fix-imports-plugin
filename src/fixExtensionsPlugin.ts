@@ -63,7 +63,8 @@ const ESM_RELATIVE_IMPORT_EXP = /from ["'](\..+)["'](;)?/g;
  * Regular expression to detect if the import path already has an extension,
  * such as .png, .svg, .jpeg, .jpg, etc.
  */
-const hasExtensionRegex = /\.(?:png|svg|css|jpe?g)$/i;
+const hasExtensionRegex =
+  /\.(?:png|svg|css|scss|jpe?g|json|md|mdx|yaml|gif|webp|ico|mp4|webm|ogg|wav|mp3|m4a|aac|webm|woff2?|eot|ttf|otf|wasm)$/i;
 
 /**
  * Modifies the contents of a file by appending the correct file extensions

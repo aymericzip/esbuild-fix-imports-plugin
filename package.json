@@ -1,6 +1,6 @@
 {
   "name": "esbuild-fix-imports-plugin",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "An ESBuild plugin that fixes import paths by applying fixAliasPlugin, fixFolderImportsPlugin, and fixExtensionsPlugin. It ensures correct file extensions, resolves path aliases, and fixes directory imports in your build output when using 'tsup' with 'bundle: false'.",
   "scripts": {
     "build": "pnpm build:package & pnpm build:types",
