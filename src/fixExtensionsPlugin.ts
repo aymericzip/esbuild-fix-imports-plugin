@@ -57,7 +57,7 @@ const CJS_RELATIVE_IMPORT_EXP = /require\(["'](\..+)["']\)(;)?/g;
  * Regular expression to match ESM import statements with relative paths.
  * Captures the import path and an optional semicolon.
  */
-const ESM_RELATIVE_IMPORT_EXP = /from ["'](\..+)["'](;)?/g;
+const ESM_RELATIVE_IMPORT_EXP = /from\s+(['"])(\.[^'"]+)\1([^;]*;?)/g;
 
 /**
  * Regular expression to detect if the import path already has an extension,
@@ -93,25 +93,25 @@ const modifyRelativeImports = (
 const modifyEsmImports = (contents: string, outExtension: string) => {
   return contents.replace(
     ESM_RELATIVE_IMPORT_EXP,
-    (_, importPath, maybeSemicolon = "") => {
+    (_, quote, importPath, rest = "") => {
       // If the import path ends with '.' or '/', it likely refers to a directory.
       if (importPath.endsWith(".") || importPath.endsWith("/")) {
         // Append '/index.mjs' to the path.
-        return `from '${importPath}/index${outExtension}'${maybeSemicolon}`;
+        return `from ${quote}${importPath}/index${outExtension}${quote}${rest}`;
       }
 
       // If the import path already ends with '.mjs', leave it as is.
       if (importPath.endsWith(outExtension)) {
-        return `from '${importPath}'${maybeSemicolon}`;
+        return `from ${quote}${importPath}${quote}${rest}`;
       }
 
       // If the import path has an existing extension (e.g., .png, .svg), leave it as is.
       if (hasExtensionRegex.test(importPath)) {
-        return `from '${importPath}'${maybeSemicolon}`;
+        return `from ${quote}${importPath}${quote}${rest}`;
       }
 
       // Otherwise, append '.mjs' to the import path.
-      return `from '${importPath}${outExtension}'${maybeSemicolon}`;
+      return `from ${quote}${importPath}${outExtension}${quote}${rest}`;
     }
   );
 };
