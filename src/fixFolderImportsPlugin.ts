@@ -81,12 +81,12 @@ const hasExtensionRegex = /\.[^./\\]+$/;
  * without an explicit index file. If so, and if an `index` file actually exists,
  * transform the path to include `/index`.
  */
-function modifyFolderImports(
+const modifyFolderImports = (
   contents: string,
   filePath: string,
   outExtension: string,
   allJsOutputs: Set<string>
-): string {
+): string => {
   // Replace ESM imports
   contents = contents.replace(ESM_RELATIVE_IMPORT_EXP, (match, importPath) => {
     const newPath = replaceFolderImport(
@@ -110,18 +110,18 @@ function modifyFolderImports(
   });
 
   return contents;
-}
+};
 
 /**
  * Decide whether the given import path should have `/index` appended
  * by checking against the set of all generated output paths.
  */
-function replaceFolderImport(
+const replaceFolderImport = (
   importPath: string,
   filePath: string,
   outExtension: string,
   allJsOutputs: Set<string>
-): string {
+): string => {
   // If the path already ends with a slash, a dot, or has an extension, skip
   if (
     importPath.endsWith("/") ||
@@ -145,4 +145,4 @@ function replaceFolderImport(
   }
 
   return importPath;
-}
+};
