@@ -68,7 +68,7 @@ export const fixFolderImportsPlugin = (): Plugin => ({
 /**
  * Regex for matching ESM and CJS relative imports.
  */
-const ESM_RELATIVE_IMPORT_EXP = /from\s+['"](\..+?)['"]/g;
+const ESM_RELATIVE_IMPORT_EXP = /from\s*['"](\..+?)['"]/g;
 const CJS_RELATIVE_IMPORT_EXP = /require\(['"](\..+?)['"]\)/g;
 
 /**

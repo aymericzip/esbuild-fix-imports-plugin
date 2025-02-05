@@ -57,7 +57,7 @@ const CJS_RELATIVE_IMPORT_EXP = /require\(["'](\..+)["']\)(;)?/g;
  * Regular expression to match ESM import statements with relative paths.
  * Captures the import path and an optional semicolon.
  */
-const ESM_RELATIVE_IMPORT_EXP = /from\s+(['"])(\.[^'"]+)\1([^;]*;?)/g;
+const ESM_RELATIVE_IMPORT_EXP = /from\s*(["'])(\.[^"']+)\1([^;]*;?)/g;
 
 /**
  * Regular expression to detect if the import path already has an extension,

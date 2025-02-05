@@ -123,7 +123,7 @@ export const getPathWithoutExtension = (path: string): string => {
 };
 
 // Regular expressions to match ESM import statements and CJS require statements.
-const ESM_IMPORT_EXP = /from\s+['"]([^'"]+)['"]/g;
+const ESM_IMPORT_EXP = /from\s*['"]([^'"]+)['"]/g;
 const CJS_REQUIRE_EXP = /require\(\s*['"]([^'"]+)['"]\s*\)/g;
 
 /**
