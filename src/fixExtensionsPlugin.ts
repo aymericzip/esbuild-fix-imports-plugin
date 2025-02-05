@@ -51,7 +51,7 @@ export const fixExtensionsPlugin = (): Plugin => ({
  * Regular expression to match CommonJS require statements with relative paths.
  * Captures the import path and an optional semicolon.
  */
-const CJS_RELATIVE_IMPORT_EXP = /require\(["'](\..+)["']\)(;)?/g;
+const CJS_RELATIVE_IMPORT_EXP = /require\s*\(\s*["'](\..+?)["']\s*\)(;?)/g;
 
 /**
  * Regular expression to match ESM import statements with relative paths.

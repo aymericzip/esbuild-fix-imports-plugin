@@ -124,7 +124,7 @@ export const getPathWithoutExtension = (path: string): string => {
 
 // Regular expressions to match ESM import statements and CJS require statements.
 const ESM_IMPORT_EXP = /from\s*['"]([^'"]+)['"]/g;
-const CJS_REQUIRE_EXP = /require\(\s*['"]([^'"]+)['"]\s*\)/g;
+const CJS_REQUIRE_EXP = /require\s*\(\s*['"]([^'"]+?)['"]\s*\)/g;
 
 /**
  * Modifies the contents of a file by replacing path aliases with relative paths.
