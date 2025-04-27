@@ -92,16 +92,16 @@ export default defineConfig({
 
 **Example `tsconfig.json`**:
 
-```json
+```json5
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
+  compilerOptions: {
+    baseUrl: ".",
+    paths: {
       "@utils/*": ["src/utils/*"],
-      "@components/*": ["src/components/*"]
-    }
+      "@components/*": ["src/components/*"],
+    },
     // ... other options
-  }
+  },
 }
 ```
 
@@ -175,7 +175,7 @@ Contributions are welcome! If you find a bug or have a feature request, please o
 2. **Clone Your Fork**:
 
    ```bash
-   git clone https://github.com/your-username/esbuild-fix-imports-plugin.git
+   git clone https://github.com/aymericzip/esbuild-fix-imports-plugin.git
    ```
 
 3. **Create a New Branch**:
@@ -223,7 +223,6 @@ This project is licensed under the ISC License.
 **Aymeric PINEAU**
 
 - **GitHub**: [aymericzip](https://github.com/aymericzip)
-- **Email**: [ay.pineau@gmail.com](mailto:ay.pineau@gmail.com)
 
 ---
 
