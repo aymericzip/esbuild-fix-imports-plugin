@@ -62,7 +62,7 @@ const ESM_RELATIVE_IMPORT_EXP = /from\s*(["'])(\.[^"']+)\1([^;]*;?)/g;
 /**
  * Regular expression to detect if the import path already contains an explicit .js extension
  */
-const hasJSExtensionsRegex = /\.(?:js)$/i;
+const hasJSExtensionRegex = /\.(?:js)$/i;
 
 /**
  * Regular expression to detect if the import path already has an extension (that is not .js),
@@ -111,9 +111,9 @@ const modifyEsmImports = (contents: string, outExtension: string) => {
       }
 
       // If the import path has an explicit .js extension and the out extension is different, replace the existing extension.
-      if (hasJSExtensionsRegex.test(importPath) && outExtension !== ".js") {
+      if (hasJSExtensionRegex.test(importPath) && outExtension !== ".js") {
         const updatedImportPath = importPath.replace(
-          hasJSExtensionsRegex,
+          hasJSExtensionRegex,
           outExtension
         );
         return `from ${quote}${updatedImportPath}${quote}${rest}`;
@@ -148,9 +148,9 @@ const modifyCjsImports = (contents: string, outExtension: string) => {
       }
 
       // If the import path has an explicit .js extension and the out extension is different, replace the existing extension.
-      if (hasJSExtensionsRegex.test(importPath) && outExtension !== ".js") {
+      if (hasJSExtensionRegex.test(importPath) && outExtension !== ".js") {
         const updatedImportPath = importPath.replace(
-          hasJSExtensionsRegex,
+          hasJSExtensionRegex,
           outExtension
         );
         return `require('${updatedImportPath}')${maybeSemicolon}`;
