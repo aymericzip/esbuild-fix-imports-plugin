@@ -198,7 +198,11 @@ Contributions are welcome! If you find a bug or have a feature request, please o
    npm run build
    ```
 
-7. **Test Your Changes**: Ensure everything works as expected.
+7. **Test Your Changes**:
+
+   ```bash
+   npm run test
+   ```
 
 8. **Commit Your Changes**:
 

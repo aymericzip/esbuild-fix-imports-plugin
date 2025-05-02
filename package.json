@@ -1,12 +1,13 @@
 {
   "name": "esbuild-fix-imports-plugin",
   "version": "1.0.20",
-  "description": "An ESBuild plugin that fixes import paths by applying fixAliasPlugin, fixFolderImportsPlugin, and fixExtensionsPlugin. It ensures correct file extensions, resolves path aliases, and fixes directory imports in your build output when using 'tsup' with 'bundle: false'.",
+  "description": "An ESBuild plugin that fixes import paths by applying fixAliasPlugin, fixFolderImportsPlugin, and fixExtensionsPlugin. It ensures correct file extensions, resolves path aliases, and fixes directory imports in your build output when using 'tsup' with 'bundle: false'. Includes comprehensive tests for all plugin features including alias resolution, folder imports, extension handling, and nested module imports.",
   "scripts": {
     "build": "pnpm build:package & pnpm build:types",
     "build:package": "tsup",
     "build:types": "tsc --project ./tsconfig.types.json && tsc-alias --project ./tsconfig.types.json",
-    "clean": "rimraf ./dist"
+    "clean": "rimraf ./dist",
+    "test": "cd ./test && pnpm build && node ./dist/esm/index.mjs && node ./dist/cjs/index.cjs"
   },
   "private": false,
   "keywords": [

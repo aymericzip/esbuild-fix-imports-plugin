@@ -11,6 +11,11 @@ export const commonOptions: Options = {
   bundle: false,
   tsconfig: "./tsconfig.json",
   esbuildPlugins: [fixImportsPlugin()],
+  loader: {
+    ".md": "copy",
+    ".json": "copy",
+    ".css": "copy",
+  },
 };
 
 export const option: Options[] = [

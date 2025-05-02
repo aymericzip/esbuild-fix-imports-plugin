@@ -15,6 +15,7 @@
     "declarationMap": true,
     "declaration": true,
     "types": ["node"],
+    "jsx": "react-jsx",
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
