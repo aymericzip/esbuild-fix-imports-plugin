@@ -60,10 +60,15 @@ const CJS_RELATIVE_IMPORT_EXP = /require\s*\(\s*["'](\..+?)["']\s*\)(;?)/g;
 const ESM_RELATIVE_IMPORT_EXP = /from\s*(["'])(\.[^"']+)\1([^;]*;?)/g;
 
 /**
- * Regular expression to detect if the import path already has an extension,
+ * Regular expression to detect if the import path already contains an explicit .js extension
+ */
+const hasJSExtensionRegex = /\.(?:js)$/i;
+
+/**
+ * Regular expression to detect if the import path already has an extension (that is not .js),
  * such as .png, .svg, .jpeg, .jpg, etc.
  */
-const hasExtensionRegex =
+const hasNonJSExtensionRegex =
   /\.(?:png|svg|css|scss|csv|tsv|xml|toml|ini|jpe?g|json|md|mdx|json|yaml|gif|webp|ico|mp4|webm|ogg|wav|mp3|m4a|aac|webm|woff2?|eot|ttf|otf|wasm)$/i;
 
 /**
@@ -105,8 +110,17 @@ const modifyEsmImports = (contents: string, outExtension: string) => {
         return `from ${quote}${importPath}${quote}${rest}`;
       }
 
+      // If the import path has an explicit .js extension and the out extension is different, replace the existing extension.
+      if (hasJSExtensionRegex.test(importPath) && outExtension !== ".js") {
+        const updatedImportPath = importPath.replace(
+          hasJSExtensionRegex,
+          outExtension
+        );
+        return `from ${quote}${updatedImportPath}${quote}${rest}`;
+      }
+
       // If the import path has an existing extension (e.g., .png, .svg), leave it as is.
-      if (hasExtensionRegex.test(importPath)) {
+      if (hasNonJSExtensionRegex.test(importPath)) {
         return `from ${quote}${importPath}${quote}${rest}`;
       }
 
@@ -133,13 +147,22 @@ const modifyCjsImports = (contents: string, outExtension: string) => {
         return `require('${importPath}/index${outExtension}')${maybeSemicolon}`;
       }
 
+      // If the import path has an explicit .js extension and the out extension is different, replace the existing extension.
+      if (hasJSExtensionRegex.test(importPath) && outExtension !== ".js") {
+        const updatedImportPath = importPath.replace(
+          hasJSExtensionRegex,
+          outExtension
+        );
+        return `require('${updatedImportPath}')${maybeSemicolon}`;
+      }
+
       // If the import path already ends with '.cjs', leave it as is.
       if (importPath.endsWith(outExtension)) {
         return `require('${importPath}')${maybeSemicolon}`;
       }
 
       // If the import path has an existing extension (e.g., .png, .svg), leave it as is.
-      if (hasExtensionRegex.test(importPath)) {
+      if (hasNonJSExtensionRegex.test(importPath)) {
         return `require('${importPath}')${maybeSemicolon}`;
       }
 
