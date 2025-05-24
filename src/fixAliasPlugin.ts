@@ -1,6 +1,7 @@
 import { dirname, join, parse, relative, resolve } from "path";
 import { type Plugin } from "esbuild";
 import { loadTsConfig } from "load-tsconfig";
+import { existsSync } from "fs";
 
 // Get the current working directory as the origin absolute path.
 const originAbsolutePath = process.cwd();
@@ -8,6 +9,7 @@ const originAbsolutePath = process.cwd();
 /**
  * ESBuild plugin to forcefully replace path aliases with relative paths in the output files.
  * It reads the alias configuration from tsconfig.json and modifies the output files to resolve the aliases.
+ * Also handles baseUrl-based imports when no explicit path aliases are configured.
  *
  * @returns {import('esbuild').Plugin} An ESBuild plugin object.
  */
@@ -22,10 +24,16 @@ export const fixAliasPlugin = (): Plugin => ({
     const outExtension = build.initialOptions.outExtension?.[".js"] ?? ".js";
 
     // Import the tsconfig.json
-    const tsConfig = loadTsConfig(originAbsolutePath, build.initialOptions.tsconfig ?? "./tsConfig.ts");
+    const tsConfig = loadTsConfig(
+      originAbsolutePath,
+      build.initialOptions.tsconfig ?? "./tsConfig.ts"
+    );
 
     // Extract the 'paths' from the tsconfig compilerOptions, or default to an empty object.
     const alias = tsConfig?.data.compilerOptions?.paths ?? {};
+
+    // Extract the 'baseUrl' from the tsconfig compilerOptions
+    const baseUrl = tsConfig?.data.compilerOptions?.baseUrl;
 
     // Hook into the 'onEnd' event of the build process.
     build.onEnd((result) => {
@@ -88,7 +96,9 @@ export const fixAliasPlugin = (): Plugin => ({
           fileContents,
           relativePath,
           alias,
-          ignoredPath
+          ignoredPath,
+          baseUrl,
+          originAbsolutePath
         );
 
         // Update the output file contents with the modified contents.
@@ -122,13 +132,17 @@ const CJS_REQUIRE_EXP = /require\s*\(\s*['"]([^'"]+?)['"]\s*\)/g;
  * @param {string} relativePath - The relative path from the file to the output directory.
  * @param {Record<string, string[]>} alias - The alias configuration from tsconfig.json.
  * @param {string} ignoredPath - The ignored path from the entry file to the output file
+ * @param {string} baseUrl - The baseUrl from the tsconfig compilerOptions
+ * @param {string} originAbsolutePath - The origin absolute path
  * @returns {string} The modified file contents.
  */
 const modifyAlias = (
   contents: string,
   relativePath: string,
   alias: Record<string, string[]>,
-  ignoredPath: string
+  ignoredPath: string,
+  baseUrl: string | undefined,
+  originAbsolutePath: string
 ) => {
   let result = contents;
 
@@ -138,7 +152,9 @@ const modifyAlias = (
       importPath,
       relativePath,
       alias,
-      ignoredPath
+      ignoredPath,
+      baseUrl,
+      originAbsolutePath
     );
     return match.replace(importPath, newImportPath);
   });
@@ -149,7 +165,9 @@ const modifyAlias = (
       importPath,
       relativePath,
       alias,
-      ignoredPath
+      ignoredPath,
+      baseUrl,
+      originAbsolutePath
     );
     return match.replace(importPath, newImportPath);
   });
@@ -172,13 +190,17 @@ const cleanPath = (path: string) => path.replace("/./", "/").replace("//", "/");
  * @param {string} relativePath - The relative path from the file to the output directory.
  * @param {Record<string, string[]>} alias - The alias configuration from tsconfig.json.
  * @param {string} ignoredPath - The ignored path from the entry file to the output file
+ * @param {string} baseUrl - The baseUrl from the tsconfig compilerOptions
+ * @param {string} originAbsolutePath - The origin absolute path
  * @returns {string} The new import path with aliases replaced by relative paths.
  */
 const replaceAliasInPath = (
   importPath: string,
   relativePath: string,
   alias: Record<string, string[]>,
-  ignoredPath: string
+  ignoredPath: string,
+  baseUrl: string | undefined,
+  originAbsolutePath: string
 ) => {
   // Iterate over each alias key in the alias configuration.
   for (const aliasKey in alias) {
@@ -216,6 +238,80 @@ const replaceAliasInPath = (
       }
     }
   }
+
+  // If no explicit alias matches and baseUrl is configured, try to handle baseUrl-based imports
+  if (
+    baseUrl &&
+    !isRelativeImport(importPath) &&
+    !isNodeModuleImport(importPath)
+  ) {
+    // Check if this could be a baseUrl-relative import
+    const resolvedBaseUrl = resolve(originAbsolutePath, baseUrl);
+
+    // Try to find the file with common extensions
+    const possibleExtensions = ["", ".ts", ".tsx", ".js", ".jsx", ".json"];
+    let foundPath = null;
+
+    for (const ext of possibleExtensions) {
+      const fullPath = resolve(resolvedBaseUrl, importPath + ext);
+      if (existsSync(fullPath)) {
+        foundPath = fullPath;
+        break;
+      }
+
+      // Also try with index file
+      const indexPath = resolve(resolvedBaseUrl, importPath, "index" + ext);
+      if (existsSync(indexPath)) {
+        foundPath = indexPath;
+        break;
+      }
+    }
+
+    if (foundPath) {
+      // This is a valid baseUrl-based import, convert it to relative
+      const relativeToBase = relative(resolvedBaseUrl, foundPath);
+      const cleanedRelativeToBase = getPathWithoutExtension(relativeToBase);
+
+      // Construct the new relative path
+      const newRelativePath = `./${relativePath}/${cleanedRelativeToBase}`;
+      const cleanedNewRelativePath = cleanPath(newRelativePath);
+
+      return cleanedNewRelativePath;
+    }
+  }
+
   // Return the original import path if no alias matches.
   return importPath;
+};
+
+/**
+ * Checks if an import path is a relative import (starts with ./ or ../)
+ */
+const isRelativeImport = (importPath: string): boolean => {
+  return importPath.startsWith("./") || importPath.startsWith("../");
+};
+
+/**
+ * Checks if an import path is a node module import (not relative and not absolute)
+ * This is a simple heuristic - if it doesn't start with ./ or ../ or /,
+ * and doesn't contain a file extension, it's likely a node module
+ */
+const isNodeModuleImport = (importPath: string): boolean => {
+  // If it starts with a dot or slash, it's not a node module
+  if (importPath.startsWith(".") || importPath.startsWith("/")) {
+    return false;
+  }
+
+  // If it contains no slashes, it's likely a node module (e.g., 'react', 'lodash')
+  if (!importPath.includes("/")) {
+    return true;
+  }
+
+  // If it starts with @, it's likely a scoped package (e.g., '@types/node')
+  if (importPath.startsWith("@")) {
+    return true;
+  }
+
+  // Otherwise, we assume it could be a baseUrl-based import
+  return false;
 };

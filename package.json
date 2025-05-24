@@ -7,7 +7,8 @@
     "build:package": "tsup",
     "build:types": "tsc --project ./tsconfig.types.json && tsc-alias --project ./tsconfig.types.json",
     "clean": "rimraf ./dist",
-    "test": "cd ./test && pnpm build && node ./dist/esm/index.mjs && node ./dist/cjs/index.cjs"
+    "test": "cd ./test && pnpm build && node ./dist/esm/index.mjs && node ./dist/cjs/index.cjs",
+    "test:baseurl": "cd ./test-baseurl && pnpm build && node ./dist/esm/index.mjs && node ./dist/cjs/index.cjs"
   },
   "private": false,
   "keywords": [
