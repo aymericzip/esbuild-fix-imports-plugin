@@ -14,6 +14,11 @@ import { extensionsTest } from "./extensions";
 // Import nested module tests
 import { deepNestedExport } from "./nested/level1";
 
+// Import Windows path tests
+import { testWindowsPaths } from "./windows-path-test";
+import { simulateWindowsPathHandling } from "./windows-simulation-test";
+import { detectBackslashes } from "./backslash-detector";
+
 // Log all test results
 console.log("=== Testing esbuild-fix-imports-plugin ===");
 console.log("Original tests:");
@@ -29,4 +34,11 @@ console.log("- JSON data:", extensionsTest.jsonData);
 console.log("- CSS styles:", extensionsTest.cssStyles);
 console.log("\nNested module tests:");
 console.log("- Deep nested export:", deepNestedExport);
+
+// Run Windows path tests
+console.log("\n=== Windows Path Tests ===");
+testWindowsPaths();
+simulateWindowsPathHandling();
+detectBackslashes();
+
 console.log("\n=== All tests completed ===");

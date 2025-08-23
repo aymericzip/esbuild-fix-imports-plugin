@@ -7,6 +7,32 @@ import { existsSync } from "fs";
 const originAbsolutePath = process.cwd();
 
 /**
+ * Converts Windows backslashes to POSIX forward slashes
+ */
+const toPosix = (p: string) => p.replace(/\\/g, "/");
+
+/**
+ * Normalizes import paths by converting to POSIX and cleaning up redundant segments
+ */
+const normalizeImportPath = (p: string) =>
+  toPosix(p)
+    .replace(/\/\.\//g, "/")
+    .replace(/(^|[^:])\/\/+/g, "$1/");
+
+/**
+ * Ensures relative imports have proper ./ or ../ prefix
+ */
+const ensureDotRelative = (p: string) => {
+  if (p.startsWith("./") || p.startsWith("../")) {
+    return p;
+  }
+  if (p.startsWith("/")) {
+    return `.${p}`;
+  }
+  return `./${p}`;
+};
+
+/**
  * ESBuild plugin to forcefully replace path aliases with relative paths in the output files.
  * It reads the alias configuration from tsconfig.json and modifies the output files to resolve the aliases.
  * Also handles baseUrl-based imports when no explicit path aliases are configured.
@@ -67,9 +93,11 @@ export const fixAliasPlugin = (): Plugin => ({
 
         // 'src/folder/index.ts',
         const entryFile =
-          entryFiles.find((filePath) =>
-            filePath.includes(relativeOutputPathWithoutExt)
-          ) ?? "";
+          entryFiles
+            .map(toPosix)
+            .find((filePath) =>
+              filePath.includes(relativeOutputPathWithoutExt)
+            ) ?? "";
 
         // 'src/folder/index',
         const entryFilePathWithoutExt = getPathWithoutExtension(entryFile);
@@ -117,8 +145,8 @@ export const fixAliasPlugin = (): Plugin => ({
 export const getPathWithoutExtension = (path: string): string => {
   // Parse the file path
   const parsedPath = parse(path);
-  // Reconstruct the path without the extension
-  return join(parsedPath.dir, parsedPath.name);
+  // Reconstruct the path without the extension and convert to POSIX
+  return toPosix(join(parsedPath.dir, parsedPath.name));
 };
 
 // Regular expressions to match ESM import statements and CJS require statements.
@@ -181,7 +209,7 @@ const modifyAlias = (
  * @param {string} path - The path to clean up.
  * @returns {string} The cleaned up path.
  */
-const cleanPath = (path: string) => path.replace("/./", "/").replace("//", "/");
+const cleanPath = (path: string) => normalizeImportPath(path);
 
 /**
  * Replaces an import path if it matches any alias with the corresponding relative path.
@@ -219,20 +247,28 @@ const replaceAliasInPath = (
         if (importPath.startsWith(aliasKeyBase)) {
           const restOfPath = importPath.slice(aliasKeyBase.length);
 
-          // Construct the new relative path.
-          const newRelativePath = `./${relativePath}/${aliasPatternBase}${restOfPath}`;
+          // Construct the new relative path and ensure it's POSIX normalized.
+          const newRelativePath = `./${toPosix(
+            relativePath
+          )}/${aliasPatternBase}${restOfPath}`;
 
-          // Clean up the new relative path.
-          let cleanedNewRelativePath = cleanPath(newRelativePath);
+          // Clean up the new relative path and ensure proper relative prefix.
+          let cleanedNewRelativePath = ensureDotRelative(
+            normalizeImportPath(newRelativePath)
+          );
 
           return cleanedNewRelativePath;
         }
       } else if (importPath === aliasKey) {
-        // Construct the new relative path.
-        const newRelativePath = `./${relativePath}/${fixedAliasPattern}`;
+        // Construct the new relative path and ensure it's POSIX normalized.
+        const newRelativePath = `./${toPosix(
+          relativePath
+        )}/${fixedAliasPattern}`;
 
-        // Clean up the new relative path.
-        let cleanedNewRelativePath = cleanPath(newRelativePath);
+        // Clean up the new relative path and ensure proper relative prefix.
+        let cleanedNewRelativePath = ensureDotRelative(
+          normalizeImportPath(newRelativePath)
+        );
 
         return cleanedNewRelativePath;
       }
@@ -272,9 +308,13 @@ const replaceAliasInPath = (
       const relativeToBase = relative(resolvedBaseUrl, foundPath);
       const cleanedRelativeToBase = getPathWithoutExtension(relativeToBase);
 
-      // Construct the new relative path
-      const newRelativePath = `./${relativePath}/${cleanedRelativeToBase}`;
-      const cleanedNewRelativePath = cleanPath(newRelativePath);
+      // Construct the new relative path and ensure it's POSIX normalized.
+      const newRelativePath = `./${toPosix(
+        relativePath
+      )}/${cleanedRelativeToBase}`;
+      const cleanedNewRelativePath = ensureDotRelative(
+        normalizeImportPath(newRelativePath)
+      );
 
       return cleanedNewRelativePath;
     }
