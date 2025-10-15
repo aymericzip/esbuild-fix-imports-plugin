@@ -1,5 +1,5 @@
 import { type Options, defineConfig } from "tsup";
-import { fixImportsPlugin } from "../src";
+import { fixImportsPlugin } from "../src/index";
 
 export const commonOptions: Options = {
   entry: ["src/**/*"],
@@ -11,13 +11,18 @@ export const commonOptions: Options = {
   bundle: false,
   tsconfig: "./tsconfig.json",
   esbuildPlugins: [fixImportsPlugin()],
+  loader: {
+    ".md": "copy",
+    ".json": "copy",
+    ".css": "copy",
+  },
 };
 
-export const option: Options[] = [
+export const options: Options[] = [
   {
     ...commonOptions,
     format: ["cjs"],
-    outDir: "dist/cjs",
+    outDir: "dist_tsup/cjs",
     outExtension: () => ({
       js: ".cjs",
     }),
@@ -25,11 +30,11 @@ export const option: Options[] = [
   {
     ...commonOptions,
     format: ["esm"],
-    outDir: "dist/esm",
+    outDir: "dist_tsup/esm",
     outExtension: () => ({
       js: ".mjs",
     }),
   },
 ];
 
-export default defineConfig(option);
+export default defineConfig(options);

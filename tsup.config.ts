@@ -18,7 +18,7 @@ export const commonOptions: Options = {
   },
 };
 
-export const option: Options[] = [
+export const options: Options[] = [
   {
     ...commonOptions,
     format: ["cjs"],
@@ -37,4 +37,4 @@ export const option: Options[] = [
   },
 ];
 
-export default defineConfig(option);
+export default defineConfig(options);

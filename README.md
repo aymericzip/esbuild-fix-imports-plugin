@@ -16,6 +16,7 @@ This plugin ensures correct file extensions, resolves path aliases, and fixes di
   - [fixAliasPlugin](#fixaliasplugin)
   - [fixFolderImportsPlugin](#fixfolderimportsplugin)
   - [fixExtensionsPlugin](#fixextensionsplugin)
+  - [writeFilePlugin](#writefileplugin)
 - [Example Configuration](#example-configuration)
 - [Contributing](#contributing)
 - [License](#license)
@@ -40,7 +41,75 @@ Or using Yarn:
 yarn add esbuild-fix-imports-plugin
 ```
 
-## Usage
+## Usage ESBuild
+
+- `esbuild.mjs`:
+
+```typescript
+import { build } from "esbuild";
+import fg from "fast-glob";
+import { fixImportsPlugin } from "../dist/esm/index.mjs";
+import { writeFilePlugin } from "../dist/esm/writeFilePlugin.mjs";
+
+/** @type {import('esbuild').BuildOptions} */
+export const common = {
+  target: "esnext",
+  sourcemap: true,
+  platform: "node",
+  bundle: false, // No bundle
+  write: false, // Cannot write files to disk, it should be done in memory for the plugins to access the output files
+  tsconfig: "./tsconfig.json",
+  plugins: [
+    fixImportsPlugin(),
+    writeFilePlugin(), // Write files to disk once the processing is done
+  ],
+  outbase: "src",
+};
+
+/** collect entry points like tsup's entry + excludes */
+const getEntryPoints = async () => await fg(["src/**/*"], { onlyFiles: true });
+
+export const buildAll = async () => {
+  const entryPoints = await getEntryPoints();
+
+  // CJS
+  await build({
+    ...common,
+    entryPoints,
+    format: "cjs",
+    outdir: "dist_esbuild/cjs",
+    outExtension: { ".js": ".cjs" },
+  });
+
+  // ESM
+  await build({
+    ...common,
+    entryPoints,
+    format: "esm",
+    outdir: "dist_esbuild/esm",
+    outExtension: { ".js": ".mjs" },
+  });
+};
+
+buildAll().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
+```
+
+- `package.json`:
+
+```json
+{
+  "scripts": {
+    "build": "node esbuild.mjs"
+  }
+}
+```
+
+## Usage TSUP
+
+> IMPORTANT: Consider using ESBuild directly as TSUP is d deprecated.
 
 In your `tsup.config.ts` or ESBuild configuration file, import the plugin and add it to your `esbuildPlugins` array:
 
@@ -164,6 +233,12 @@ export default defineConfig([
 - **`bundle: false`**: Setting `bundle` to `false` tells `tsup` not to bundle the modules, which can lead to issues with import paths. This plugin helps resolve those issues.
 - **`esbuildPlugins: [fixImportsPlugin()]`**: Applies the combined plugin to fix import paths during the build process.
 
+### writeFilePlugin
+
+**Description**: Writes the output files to disk once the processing is done.
+
+**Use Case**: This plugin is useful when you want to write the output files to disk after the processing is done.
+
 ## Contributing
 
 Contributions are welcome! If you find a bug or have a feature request, please open an issue on [GitHub](https://github.com/aymericzip/esbuild-fix-imports-plugin/issues).
@@ -245,22 +320,6 @@ Special thanks to the contributors and the open-source community for their conti
 ### Why do I need this plugin?
 
 When using `tsup` with `bundle: false`, you might encounter issues with import paths in the output files, such as missing file extensions, unresolved path aliases, or imports pointing to directories without explicit `index` files. This plugin automates the process of fixing these issues during the build.
-
-### Can I use this plugin with plain ESBuild?
-
-Yes, you can use the plugins directly with ESBuild by adding them to the `plugins` array in your ESBuild configuration.
-
-```typescript
-import esbuild from "esbuild";
-import { fixImportsPlugin } from "esbuild-fix-imports-plugin";
-
-esbuild.build({
-  entryPoints: ["src/index.ts"],
-  bundle: false,
-  plugins: [fixImportsPlugin()],
-  // ... other configurations
-});
-```
 
 ### Do I need all three plugins?
 

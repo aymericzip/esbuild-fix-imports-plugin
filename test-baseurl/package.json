@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsup"
+    "build:esbuild": "node ./esbuild.mjs",
+    "build:tsup": "tsup",
+    "build": "pnpm build:esbuild && pnpm build:tsup"
   },
   "dependencies": {
+    "esbuild": "^0.25.11",
     "tsup": "^8.3.5"
   },
   "keywords": [],

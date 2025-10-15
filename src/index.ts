@@ -2,6 +2,7 @@ import { type Plugin } from "esbuild";
 import { fixAliasPlugin } from "./fixAliasPlugin";
 import { fixExtensionsPlugin } from "./fixExtensionsPlugin";
 import { fixFolderImportsPlugin } from "./fixFolderImportsPlugin";
+import { writeFilePlugin } from "./writeFilePlugin";
 
 /**
  * Combined plugin that runs fixAliasPlugin, fixFolderImportsPlugin, and fixExtensionsPlugin.
@@ -19,4 +20,4 @@ export const fixImportsPlugin = (): Plugin => ({
 });
 
 // Optionally export individual plugins
-export { fixAliasPlugin, fixExtensionsPlugin, fixFolderImportsPlugin };
+export { fixAliasPlugin, fixExtensionsPlugin, fixFolderImportsPlugin, writeFilePlugin };

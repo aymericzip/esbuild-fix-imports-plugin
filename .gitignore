@@ -2,6 +2,10 @@
 
 # build
 dist
+test/dist_esbuild
+test/dist_tsup
+test-baseurl/dist_esbuild
+test-baseurl/dist_tsup
 
 # dependencies
 node_modules
