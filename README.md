@@ -74,7 +74,7 @@ export const buildAll = async () => {
     ...common,
     entryPoints,
     format: "cjs",
-    outdir: "dist_esbuild/cjs",
+    outdir: "dist
     outExtension: { ".js": ".cjs" },
   });
 
@@ -83,7 +83,7 @@ export const buildAll = async () => {
     ...common,
     entryPoints,
     format: "esm",
-    outdir: "dist_esbuild/esm",
+    outdir: "dist/esm",
     outExtension: { ".js": ".mjs" },
   });
 
