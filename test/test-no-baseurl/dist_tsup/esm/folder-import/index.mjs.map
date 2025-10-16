@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/folder-import/index.ts"],"sourcesContent":["export const folderImport = \"folder-import-test\";\n"],"mappings":"AAAO,MAAM,eAAe;","names":[]}

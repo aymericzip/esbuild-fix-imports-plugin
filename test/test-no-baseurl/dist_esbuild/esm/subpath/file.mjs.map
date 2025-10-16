@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/subpath/file.ts"],
+  "sourcesContent": ["export const test = \"test\";\n"],
+  "mappings": "AAAO,MAAM,OAAO;",
+  "names": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/extensions/styles.ts"],
+  "sourcesContent": ["export const cssStyles = \"css-styles-test\";\n"],
+  "mappings": "AAAO,MAAM,YAAY;",
+  "names": []
+}

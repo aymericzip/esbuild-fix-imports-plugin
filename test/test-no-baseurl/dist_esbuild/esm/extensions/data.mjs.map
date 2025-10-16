@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/extensions/data.ts"],
+  "sourcesContent": ["import jsonData from \"./data.json\" with { type: 'json' };\nexport { jsonData };\n"],
+  "mappings": "AAAA,OAAO,cAAc,cAAc,KAAK,EAAE,MAAM,OAAO;",
+  "names": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/extensions/index.ts"],
+  "sourcesContent": ["import { tsxComponent } from \"./component\";\nimport { jsonData } from \"./data\";\nimport { cssStyles } from \"./styles\";\n\nexport const extensionsTest = {\n  tsxComponent,\n  jsonData,\n  cssStyles,\n};\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,uBAA6B;AAC7B,kBAAyB;AACzB,oBAA0B;AAEnB,MAAM,iBAAiB;AAAA,EAC5B;AAAA,EACA;AAAA,EACA;AACF;",
+  "names": []
+}

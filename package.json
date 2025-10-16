@@ -7,13 +7,16 @@
     "build:package": "tsup",
     "build:types": "tsc --project ./tsconfig.types.json && tsc-alias --project ./tsconfig.types.json",
     "clean": "rimraf ./dist",
-    "test": "pnpm test:no-baseurl && pnpm test:baseurl",
-    "test:no-baseurl": "cd ./test && pnpm build && cd ../ && pnpm test:no-baseurl:tsup && pnpm test:no-baseurl:esbuild",
-    "test:no-baseurl:tsup": "cd ./test && node ./dist_tsup/esm/index.mjs && node ./dist_tsup/cjs/index.cjs",
-    "test:no-baseurl:esbuild": "cd ./test && node ./dist_esbuild/esm/index.mjs && node ./dist_esbuild/cjs/index.cjs",
-    "test:baseurl": "cd ./test-baseurl && pnpm build && cd ../ && pnpm test:baseurl:tsup && pnpm test:baseurl:esbuild",
-    "test:baseurl:tsup": "cd ./test-baseurl && node ./dist_tsup/esm/index.mjs && node ./dist_tsup/cjs/index.cjs",
-    "test:baseurl:esbuild": "cd ./test-baseurl && node ./dist_esbuild/esm/index.mjs && node ./dist_esbuild/cjs/index.cjs"
+    "test": "pnpm test:no-baseurl && pnpm test:baseurl && pnpm test:windows",
+    "test:no-baseurl": "cd ./test/test-no-baseurl && pnpm build && cd ../ && pnpm test:no-baseurl:tsup && pnpm test:no-baseurl:esbuild",
+    "test:no-baseurl:tsup": "cd ./test/test-no-baseurl && node ./dist_tsup/esm/index.mjs && node ./dist_tsup/cjs/index.cjs",
+    "test:no-baseurl:esbuild": "cd ./test/test-no-baseurl && node ./dist_esbuild/esm/index.mjs && node ./dist_esbuild/cjs/index.cjs",
+    "test:baseurl": "cd ./test/test-baseurl && pnpm build && cd ../ && pnpm test:baseurl:tsup && pnpm test:baseurl:esbuild",
+    "test:baseurl:tsup": "cd ./test/test-baseurl && node ./dist_tsup/esm/index.mjs && node ./dist_tsup/cjs/index.cjs",
+    "test:baseurl:esbuild": "cd ./test/test-baseurl && node ./dist_esbuild/esm/index.mjs && node ./dist_esbuild/cjs/index.cjs",
+    "test:windows": "pnpm test:windows:tsup && pnpm test:windows:esbuild",
+    "test:windows:tsup": "cd ./test && node ./test-windows-comprehensive.js && node ./test-windows-paths.js",
+    "test:windows:esbuild": "cd ./test && node ./test-windows-comprehensive.js && node ./test-windows-paths.js"
   },
   "private": false,
   "keywords": [

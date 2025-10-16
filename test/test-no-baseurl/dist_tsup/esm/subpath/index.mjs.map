@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/subpath/index.ts"],"sourcesContent":["export * from \"./file\";\n"],"mappings":"AAAA,cAAc;","names":[]}

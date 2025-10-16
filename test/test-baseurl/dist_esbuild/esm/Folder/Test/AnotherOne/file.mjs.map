@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../src/Folder/Test/AnotherOne/file.ts"],
+  "sourcesContent": ["// This demonstrates the issue: these absolute imports work in TypeScript\n// thanks to baseUrl, but break after build because they're not converted to relative paths\nimport { foo } from \"Schemas/a\";\nimport { baz } from \"Schemas/b\";\n\nexport const testFunction = () => {\n  console.log(\"Testing baseUrl imports:\", foo, baz);\n  return { foo, baz };\n};\n"],
+  "mappings": "AAEA,SAAS,WAAW;AACpB,SAAS,WAAW;AAEb,MAAM,eAAe,MAAM;AAChC,UAAQ,IAAI,4BAA4B,KAAK,GAAG;AAChD,SAAO,EAAE,KAAK,IAAI;AACpB;",
+  "names": []
+}

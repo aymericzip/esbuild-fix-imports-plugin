@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/file.js"],
+  "sourcesContent": ["export const test = \"test\";\n"],
+  "mappings": "AAAO,MAAM,OAAO;",
+  "names": []
+}

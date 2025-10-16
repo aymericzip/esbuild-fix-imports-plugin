@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/alias/aliased.ts"],
+  "sourcesContent": ["export const aliasedImport = \"aliased-import-test\";\n"],
+  "mappings": "AAAO,MAAM,gBAAgB;",
+  "names": []
+}

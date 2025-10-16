@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../../src/nested/level1/level2/level3/deep-module.ts"],
+  "sourcesContent": ["export const deepNestedExport = \"deep-nested-export-test\";\n"],
+  "mappings": "AAAO,MAAM,mBAAmB;",
+  "names": []
+}

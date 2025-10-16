@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../src/nested/level1/level2/index.ts"],
+  "sourcesContent": ["export { deepNestedExport } from \"./level3/deep-module\";\n"],
+  "mappings": "AAAA,SAAS,wBAAwB;",
+  "names": []
+}

@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/extensions/component.tsx"],"sourcesContent":["export const tsxComponent = \"tsx-component-test\";\n"],"mappings":"AAAO,MAAM,eAAe;","names":[]}

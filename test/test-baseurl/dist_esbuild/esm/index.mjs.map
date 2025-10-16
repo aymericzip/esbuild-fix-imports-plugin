@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/index.ts"],
+  "sourcesContent": ["import { testFunction } from \"./Folder/Test/AnotherOne/file\";\n\nconsole.log(\"Test baseDir:\");\nconsole.log(\"- Test baseDir:\", testFunction());\n"],
+  "mappings": "AAAA,SAAS,oBAAoB;AAE7B,QAAQ,IAAI,eAAe;AAC3B,QAAQ,IAAI,mBAAmB,aAAa,CAAC;",
+  "names": []
+}

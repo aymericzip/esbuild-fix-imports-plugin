@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/windows-path-test.ts"],
+  "sourcesContent": ["// Test file to verify Windows path handling in the alias plugin\nimport { jsonData } from \"./extensions/data\";\nimport { aliasedImport } from \"./alias\";\nimport { deepNestedExport } from \"./nested/level1/level2/level3/deep-module\";\n\n// These imports should work correctly and not contain backslashes\nexport const testData = jsonData;\nexport const testAlias = aliasedImport;\nexport const testNested = deepNestedExport;\n\n// Test function to verify all imports are working\nexport const testWindowsPaths = () => {\n  console.log(\"=== Windows Path Test Results ===\");\n  console.log(\"\u2705 data import:\", typeof jsonData);\n  console.log(\"\u2705 alias import:\", typeof aliasedImport);\n  console.log(\"\u2705 nested import:\", typeof deepNestedExport);\n  console.log(\"\u2705 All imports resolved successfully with POSIX separators\");\n  return true;\n};\n"],
+  "mappings": "AACA,SAAS,gBAAgB;AACzB,SAAS,qBAAqB;AAC9B,SAAS,wBAAwB;AAG1B,MAAM,WAAW;AACjB,MAAM,YAAY;AAClB,MAAM,aAAa;AAGnB,MAAM,mBAAmB,MAAM;AACpC,UAAQ,IAAI,mCAAmC;AAC/C,UAAQ,IAAI,uBAAkB,OAAO,QAAQ;AAC7C,UAAQ,IAAI,wBAAmB,OAAO,aAAa;AACnD,UAAQ,IAAI,yBAAoB,OAAO,gBAAgB;AACvD,UAAQ,IAAI,gEAA2D;AACvE,SAAO;AACT;",
+  "names": []
+}
