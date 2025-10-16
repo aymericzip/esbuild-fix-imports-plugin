@@ -6,13 +6,11 @@ import { writeFilePlugin } from "../dist/esm/writeFilePlugin.mjs";
 /** @type {import('esbuild').BuildOptions} */
 export const common = {
   target: "esnext",
-  sourcemap: true,
   platform: "node",
   bundle: false, // No bundle
   write: false, // Cannot write files to disk, it should be done in memory for the plugins to access the output files
   tsconfig: "./tsconfig.json",
   plugins: [fixImportsPlugin(), writeFilePlugin()],
-  outbase: "src",
   loader: {
     ".md": "copy",
     ".json": "copy",

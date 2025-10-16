@@ -48,13 +48,11 @@ yarn add esbuild-fix-imports-plugin
 ```typescript
 import { build } from "esbuild";
 import fg from "fast-glob";
-import { fixImportsPlugin } from "../dist/esm/index.mjs";
-import { writeFilePlugin } from "../dist/esm/writeFilePlugin.mjs";
+import { fixImportsPlugin, writeFilePlugin } from "esbuild-fix-imports-plugin";
 
 /** @type {import('esbuild').BuildOptions} */
 export const common = {
   target: "esnext",
-  sourcemap: true,
   platform: "node",
   bundle: false, // No bundle
   write: false, // Cannot write files to disk, it should be done in memory for the plugins to access the output files
@@ -63,7 +61,6 @@ export const common = {
     fixImportsPlugin(),
     writeFilePlugin(), // Write files to disk once the processing is done
   ],
-  outbase: "src",
 };
 
 /** collect entry points like tsup's entry + excludes */
