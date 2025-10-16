@@ -70,7 +70,7 @@ export const buildAll = async () => {
   const entryPoints = await getEntryPoints();
 
   // CJS
-  await build({
+  const CJSPromise = build({
     ...common,
     entryPoints,
     format: "cjs",
@@ -79,13 +79,16 @@ export const buildAll = async () => {
   });
 
   // ESM
-  await build({
+  const ESMPromise = build({
     ...common,
     entryPoints,
     format: "esm",
     outdir: "dist_esbuild/esm",
     outExtension: { ".js": ".mjs" },
   });
+
+  // Execute both builds in parallel for faster execution
+  await Promise.all([CJSPromise, ESMPromise]);
 };
 
 buildAll().catch((err) => {
